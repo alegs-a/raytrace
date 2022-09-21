@@ -1,14 +1,14 @@
-//! Contains the maths functionality needed for Raytrace.
+//! Defines vectors and points, and their related operations
 
-///
-/// A 3-dimensional vector and related operations.
+/// A 3-dimensional vector.
+#[derive(Copy, Clone, Debug)]
 pub struct Vec3d {
     /// The x component of the vector
     pub x: f64,
     /// The y component of the vector
     pub y: f64,
     /// The z component of the vector
-    pub z: f64
+    pub z: f64,
 }
 
 impl Vec3d {
@@ -32,9 +32,8 @@ impl Vec3d {
         (self.x * self.x) + (self.y * self.y) + (self.z * self.z)
     }
 
-
     /// Calculates the length of the vector
-    /// Takes the square root of the [length_squared]
+    /// Takes the square root of the length_squared
     /// # Panics
     /// - Uses `.sqrt()`, which panics if it receives a negative value other than -0.0
     /// # Examples
@@ -46,9 +45,13 @@ impl Vec3d {
     pub fn length(&self) -> f64 {
         self.length_squared().sqrt()
     }
-    
+
+    pub fn unit_vector(self) -> Vec3d {
+        self / self.length()
+    }
+
     /// Scalar multiplication of a vector
-    fn scalarp(&self, s: f64) -> Vec3d {
+    pub fn scalarp(&self, s: f64) -> Vec3d {
         Vec3d {
             x: self.x * s,
             y: self.y * s,
@@ -57,18 +60,24 @@ impl Vec3d {
     }
 
     /// Dot product of two vectors
-    fn dotp(&self, rhs: &Vec3d) -> f64 {
+    pub fn dotp(&self, rhs: &Vec3d) -> f64 {
         (self.x * rhs.x) + (self.y * rhs.y) + (self.z * rhs.z)
     }
 
     /// Cross product of two vectors
-    fn crossp(&self, rhs: &Vec3d) -> Vec3d {
+    pub fn crossp(&self, rhs: &Vec3d) -> Vec3d {
         Vec3d {
             x: (self.y * rhs.z) - (self.z * rhs.y),
             y: (self.z * rhs.x) - (self.x * rhs.z),
             z: (self.x * rhs.y) - (self.y * rhs.x),
         }
     }
+}
+
+/// Normalises a vector.
+/// Returns vector with same direction but a magnitude of 1.
+pub fn normalise(v: Vec3d) -> Vec3d {
+    v.scalarp(1.0 / v.length())
 }
 
 impl std::ops::Add for Vec3d {
@@ -95,9 +104,31 @@ impl std::ops::Sub for Vec3d {
     }
 }
 
-impl Vec3d {
+impl std::ops::Div<f64> for Vec3d {
+    type Output = Self;
+
+    fn div(self, rhs: f64) -> Self {
+        self * (1.0 / rhs)
+    }
 }
 
+impl std::ops::Mul<f64> for Vec3d {
+    type Output = Self;
+
+    fn mul(self, rhs: f64) -> Self {
+        Vec3d {
+            x: self.x * rhs,
+            y: self.y * rhs,
+            z: self.z * rhs,
+        }
+    }
+}
+
+impl std::fmt::Display for Vec3d {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Vector: {}, {}, {}", self.x, self.y, self.z)
+    }
+}
 
 #[cfg(test)]
 #[test]
@@ -118,4 +149,3 @@ fn test_length() {
     };
     assert_eq!(complex_vec.length(), 1.7320508075688772);
 }
-

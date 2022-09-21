@@ -1,4 +1,4 @@
+pub mod image;
+pub mod ray;
 #[warn(missing_docs)]
-
-pub mod math; 
-pub mod output;
+pub mod vec3d;
