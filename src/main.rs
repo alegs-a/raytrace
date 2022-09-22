@@ -32,9 +32,9 @@ fn main() {
                 orig: origin,
                 dir: lower_left_corner + horizontal.scalarp(u) + vertical.scalarp(v) - origin,
             };
-            eprintln!("Pixel: {x}, {y}");
+            // DEBUG eprintln!("Pixel: {x}, {y}");
             let pixel_colour = ray_colour(r);
-            eprintln!("Colour: {pixel_colour}\n");
+            // DEBUG eprintln!("Colour: {pixel_colour}\n");
             println!("{}", pixel_colour.write());
         }
     }
@@ -42,11 +42,28 @@ fn main() {
 
 }
 
+fn hit_sphere(center: Vec3d, radius: f64, ray: Ray) -> bool {
+    let oc = ray.orig - center;
+    let a = ray.dir.dotp(&ray.dir);
+    let b = 2.0 * oc.dotp(&ray.dir);
+    let c = oc.dotp(&oc) - (radius * radius);
+    let discriminant = (b * b) - (4.0 * a * c);
+    discriminant > 0.0
+}
+
 
 /// Calulates the background colour for a given ray, if it does not intersect any other geometry.
 fn ray_colour(ray: Ray) -> Colour {
+    let center = Vec3d {
+        x: 0.0,
+        y: 0.0,
+        z: -1.0
+    }; // DEV
+    if hit_sphere(center, 0.5, ray) {
+        return Colour {r: 1.0, g: 0.0, b: 0.0};
+    }
     let unit_direction = ray.dir.unit_vector();
-    eprintln!("Ray: {ray}\nNormalised direction: {unit_direction}");
+    // DEBUG eprintln!("Ray: {ray}\nNormalised direction: {unit_direction}");
     let t = 0.5 * (unit_direction.y + 1.0);
     Colour { r: 1.0, g: 1.0, b: 1.0} * (1.0 - t) + Colour { r: 0.0, g: 0.7, b: 1.0 } * t
 }
