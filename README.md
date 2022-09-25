@@ -5,3 +5,4 @@ Created following the guide [here](https://raytracing.github.io/books/RayTracing
 ## Examples
 My most recent (successful) render:
 ![My most recent render](/output.ppm)
+(nevermind github doesn't like .ppm files)
