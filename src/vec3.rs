@@ -1,4 +1,4 @@
-use std::ops::{Add, Sub, Mul, Div, Neg};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vec3 {
@@ -26,6 +26,10 @@ impl Vec3 {
 
     pub fn length(&self) -> f64 {
         self.length_squared().sqrt()
+    }
+
+    pub fn unit_vector(&self) -> Vec3 {
+        self / self.length()
     }
 }
 
@@ -149,4 +153,3 @@ impl Div<f64> for &Vec3 {
         }
     }
 }
-

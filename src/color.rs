@@ -1,4 +1,4 @@
-use std::ops::{Add, Sub, Mul, Div};
+use std::ops::{Add, Div, Mul, Sub};
 
 pub struct Color {
     pub r: f64,
@@ -8,7 +8,8 @@ pub struct Color {
 
 impl Color {
     pub fn write_color(color: Color) {
-        println!("{} {} {}",
+        println!(
+            "{} {} {}",
             (255.999 * color.r) as i32,
             (255.999 * color.g) as i32,
             (255.999 * color.b) as i32,
