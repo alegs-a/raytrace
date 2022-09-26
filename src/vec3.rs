@@ -1,6 +1,7 @@
 use std::ops::{Add, Div, Mul, Neg, Sub};
+use super::color::Color;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Vec3 {
     pub x: f64,
     pub y: f64,
@@ -150,6 +151,18 @@ impl Div<f64> for &Vec3 {
             x: self.x * (1.0 / rhs),
             y: self.y * (1.0 / rhs),
             z: self.z * (1.0 / rhs),
+        }
+    }
+}
+
+impl Add<Color> for Vec3 {
+    type Output = Color;
+
+    fn add(self, rhs: Color) -> Color {
+        Color {
+            r: self.x + rhs.r,
+            g: self.y + rhs.g,
+            b: self.z + rhs.b,
         }
     }
 }

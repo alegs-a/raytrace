@@ -1,5 +1,6 @@
 use std::ops::{Add, Div, Mul, Sub};
 
+/// Define an RGB color
 pub struct Color {
     pub r: f64,
     pub g: f64,
