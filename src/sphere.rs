@@ -33,3 +33,12 @@ impl Hittable for Sphere {
         true
     }
 }
+
+impl Sphere {
+    pub fn new(center: Vec3, radius: f64) -> Sphere {
+        Sphere {
+            center,
+            radius,
+        }
+    }
+}

@@ -5,8 +5,8 @@ use raytrace::ray::Ray;
 use raytrace::sphere::Sphere;
 use raytrace::vec3::Vec3;
 
-const INFINITY: f64 = std::f64::INFINITY;
-const PI: f64 = std::f64::consts::PI;
+// use std::f64::consts::PI;
+use std::f64::INFINITY;
 
 fn main() {
 
@@ -19,23 +19,8 @@ fn main() {
     // World
 
     let mut world = HittableList::default();
-    world.add(Box::new(Sphere {
-        center: Vec3 {
-            x: 0.0,
-            y: 0.0,
-            z: -1.0,
-        },
-        radius: 0.5,
-    }));
-    world.add(Box::new(Sphere {
-        center: Vec3 {
-            x: 0.0,
-            y: -100.5,
-            z: -1.0,
-        },
-        radius: 100.0,
-    }));
-
+    world.add(Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)));
+    world.add(Box::new(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0)));
 
     // Camera
 
@@ -43,29 +28,13 @@ fn main() {
     let viewport_width = aspect_ratio * viewport_height;
     let focal_length = 1.0;
 
-    let origin = Vec3 {
-        x: 0.0,
-        y: 0.0,
-        z: 0.0,
-    };
-    let horizontal = Vec3 {
-        x: viewport_width,
-        y: 0.0,
-        z: 0.0,
-    };
-    let vertical = Vec3 {
-        x: 0.0,
-        y: viewport_height,
-        z: 0.0,
-    };
+    let origin = Vec3::new(0.0, 0.0, 0.0); 
+    let horizontal = Vec3::new(viewport_width, 0.0, 0.0);
+    let vertical = Vec3::new(0.0, viewport_height, 0.0);
     let lower_left_corner = origin
         - (horizontal / 2.0)
         - (vertical / 2.0)
-        - Vec3 {
-            x: 0.0,
-            y: 0.0,
-            z: focal_length,
-        };
+        - Vec3::new(0.0, 0.0, focal_length);
 
     // Render
 
@@ -76,10 +45,7 @@ fn main() {
         for i in 0..image_width {
             let u = (i as f64) / ((image_width - 1) as f64);
             let v = (j as f64) / ((image_height - 1) as f64);
-            let r = Ray {
-                orig: origin,
-                dir: lower_left_corner + (horizontal * u) + (vertical * v) - origin,
-            };
+            let r = Ray::new(origin, lower_left_corner + (horizontal * u) + (vertical * v) - origin);
             let pixel_color = ray_color(&r, &world);
             Color::write_color(pixel_color);
         }
@@ -90,44 +56,28 @@ fn main() {
 fn ray_color(r: &Ray, world: &dyn Hittable) -> Color {
     let mut rec = HitRecord::default();
     if world.hit(r, 0.0, INFINITY, &mut rec) {
-        return (rec.normal + Color {
-            // White (1, 1, 1)
-            r: 1.0,
-            g: 1.0,
-            b: 1.0,
-        }) * 0.5;
+        return (rec.normal + Color::white()) * 0.5;
     }
     let unit_direction: Vec3 = r.dir.unit_vector();
     let t = 0.5 * (unit_direction.y + 1.0);
-    (Color {
-        // White (1, 1, 1)
-        r: 1.0,
-        g: 1.0,
-        b: 1.0,
-    } * (1.0 - t))
-        + (Color {
-            // Bluish (0.5, 0.7, 1)
-            r: 0.5,
-            g: 0.7,
-            b: 1.0,
-        } * t)
+    (Color::white() * (1.0 - t)) + (Color::new(0.5, 0.7, 1.0) * t)
 }
 
-/// Calculate the solutions to `r.at(t)` for all `t` that makes the ray point to the surface of the
-/// sphere defined by `center` and `radius`
-fn hit_sphere(center: Vec3, radius: f64, r: &Ray) -> f64 {
-    let oc = r.orig - center;
-    let a = r.dir.length_squared();
-    let half_b = oc.dot(&r.dir);
-    let c = oc.length_squared() - (radius * radius);
-    let discriminant = (half_b * half_b) - (a * c);
-    if discriminant < 0.0 {
-        -1.0
-    } else {
-        (-half_b - discriminant.sqrt()) / a
-    }
-}
+// /// Calculate the solutions to `r.at(t)` for all `t` that makes the ray point to the surface of the
+// /// sphere defined by `center` and `radius`
+// fn hit_sphere(center: Vec3, radius: f64, r: &Ray) -> f64 {
+//     let oc = r.orig - center;
+//     let a = r.dir.length_squared();
+//     let half_b = oc.dot(&r.dir);
+//     let c = oc.length_squared() - (radius * radius);
+//     let discriminant = (half_b * half_b) - (a * c);
+//     if discriminant < 0.0 {
+//         -1.0
+//     } else {
+//         (-half_b - discriminant.sqrt()) / a
+//     }
+// }
 
-fn degrees_to_radians(degrees: f64) -> f64 {
-    (degrees * PI) / 180.0
-}
+// fn degrees_to_radians(degrees: f64) -> f64 {
+//     (degrees * PI) / 180.0
+// }

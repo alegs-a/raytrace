@@ -16,6 +16,22 @@ impl Color {
             (255.999 * color.b) as i32,
         );
     }
+
+    pub fn white() -> Color {
+        Color {
+            r: 1.0,
+            g: 1.0,
+            b: 1.0,
+        }
+    }
+
+    pub fn new(r: f64, g: f64, b: f64) -> Color {
+        Color {
+            r,
+            g,
+            b,
+        }
+    }
 }
 
 impl Add for Color {
