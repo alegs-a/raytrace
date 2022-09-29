@@ -1,4 +1,4 @@
-use std::ops::{Add, Div, Mul, Sub};
+use std::ops::{Add, Div, Mul, Sub, AddAssign};
 
 /// Define an RGB color
 pub struct Color {
@@ -8,12 +8,33 @@ pub struct Color {
 }
 
 impl Color {
-    pub fn write_color(color: Color) {
+    fn clamp(x: f64, min: f64, max: f64) -> f64 {
+        if x < min {
+            return min
+        }
+        if x > max {
+            return max
+        }
+        x
+    }
+
+    pub fn write_color(color: Color, samples_per_pixel: u32) {
+        let mut r = color.r;
+        let mut g = color.g;
+        let mut b = color.b;
+
+        // Divide the colour by the number of samples per pixel
+        let scale = 1.0 / samples_per_pixel as f64;
+        r *= scale;
+        g *= scale;
+        b *= scale;
+
+        // Write the translated [0, 255] value of each colour component
         println!(
             "{} {} {}",
-            (255.999 * color.r) as i32,
-            (255.999 * color.g) as i32,
-            (255.999 * color.b) as i32,
+            (256.0 * Self::clamp(r, 0.0, 0.999)) as i32,
+            (256.0 * Self::clamp(g, 0.0, 0.999)) as i32,
+            (256.0 * Self::clamp(b, 0.0, 0.999)) as i32,
         );
     }
 
@@ -22,6 +43,14 @@ impl Color {
             r: 1.0,
             g: 1.0,
             b: 1.0,
+        }
+    }
+
+    pub fn black() -> Color {
+        Color {
+            r: 0.0,
+            b: 0.0,
+            g: 0.0,
         }
     }
 
@@ -51,6 +80,16 @@ impl Add for &Color {
 
     fn add(self, rhs: Self) -> Color {
         Color {
+            r: self.r + rhs.r,
+            g: self.g + rhs.g,
+            b: self.b + rhs.b,
+        }
+    }
+}
+
+impl AddAssign for Color {
+    fn add_assign(&mut self, rhs: Self) {
+        *self = Self {
             r: self.r + rhs.r,
             g: self.g + rhs.g,
             b: self.b + rhs.b,
