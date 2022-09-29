@@ -1,5 +1,5 @@
-use std::ops::{Add, Div, Mul, Neg, Sub};
 use super::color::Color;
+use std::ops::{Add, Div, Mul, Neg, Sub};
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Vec3 {
@@ -10,11 +10,7 @@ pub struct Vec3 {
 
 impl Vec3 {
     pub fn new(x: f64, y: f64, z: f64) -> Vec3 {
-        Vec3 {
-            x,
-            y,
-            z,
-        }
+        Vec3 { x, y, z }
     }
     pub fn dot(&self, v: &Vec3) -> f64 {
         (self.x * v.x) + (self.y * v.y) + (self.z * v.z)

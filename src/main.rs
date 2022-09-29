@@ -12,10 +12,8 @@ use rand::Rng;
 use std::f64::INFINITY;
 
 fn main() {
-
     // Image
 
-    let rng = rand::thread_rng();
     let aspect_ratio = 16.0 / 9.0;
     let image_width = 400;
     let image_height = (image_width as f64 / aspect_ratio) as i32;
@@ -67,6 +65,7 @@ fn random_f64() -> f64 {
     num
 }
 
+#[allow(dead_code)]
 fn random_f64_wide(lower: f64, upper: f64) -> f64 {
     let mut rng = rand::thread_rng();
     let num = rng.gen_range(lower..upper);

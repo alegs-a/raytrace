@@ -1,4 +1,4 @@
-use std::ops::{Add, Div, Mul, Sub, AddAssign};
+use std::ops::{Add, AddAssign, Div, Mul, Sub};
 
 /// Define an RGB color
 pub struct Color {
@@ -10,10 +10,10 @@ pub struct Color {
 impl Color {
     fn clamp(x: f64, min: f64, max: f64) -> f64 {
         if x < min {
-            return min
+            return min;
         }
         if x > max {
-            return max
+            return max;
         }
         x
     }
@@ -55,11 +55,7 @@ impl Color {
     }
 
     pub fn new(r: f64, g: f64, b: f64) -> Color {
-        Color {
-            r,
-            g,
-            b,
-        }
+        Color { r, g, b }
     }
 }
 

@@ -1,5 +1,5 @@
-use super::vec3::Vec3;
 use super::ray::Ray;
+use super::vec3::Vec3;
 
 #[derive(Default, Clone, Copy)]
 pub struct HitRecord {

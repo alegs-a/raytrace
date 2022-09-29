@@ -1,4 +1,4 @@
-use crate::{ray::Ray, hittable::HitRecord};
+use crate::{hittable::HitRecord, ray::Ray};
 
 use super::hittable::Hittable;
 

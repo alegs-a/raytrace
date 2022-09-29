@@ -1,6 +1,6 @@
-use super::vec3::Vec3;
-use super::ray::Ray;
 use super::hittable::{HitRecord, Hittable};
+use super::ray::Ray;
+use super::vec3::Vec3;
 
 pub struct Sphere {
     pub center: Vec3,
@@ -15,14 +15,18 @@ impl Hittable for Sphere {
         let c = (oc.length_squared()) - (self.radius * self.radius);
 
         let discriminant = (half_b * half_b) - (a * c);
-        if discriminant < 0.0 { return false; }
+        if discriminant < 0.0 {
+            return false;
+        }
         let sqrtd = discriminant.sqrt();
 
         // Find the nearest square root that lies in the acceptable range
         let root = (-half_b - sqrtd) / a;
         if root < t_min || t_max < root {
             let root = (-half_b + sqrtd) / a;
-            if root < t_min || t_max < root { return false; }
+            if root < t_min || t_max < root {
+                return false;
+            }
         }
 
         rec.t = root;
@@ -36,9 +40,6 @@ impl Hittable for Sphere {
 
 impl Sphere {
     pub fn new(center: Vec3, radius: f64) -> Sphere {
-        Sphere {
-            center,
-            radius,
-        }
+        Sphere { center, radius }
     }
 }
