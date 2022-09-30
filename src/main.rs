@@ -5,8 +5,7 @@ use raytrace::hittable_list::HittableList;
 use raytrace::ray::Ray;
 use raytrace::sphere::Sphere;
 use raytrace::vec3::Vec3;
-
-use rand::Rng;
+use raytrace::math::random_f64;
 
 // use std::f64::consts::PI;
 use std::f64::INFINITY;
@@ -59,16 +58,6 @@ fn ray_color(r: &Ray, world: &dyn Hittable) -> Color {
     (Color::white() * (1.0 - t)) + (Color::new(0.5, 0.7, 1.0) * t)
 }
 
-fn random_f64() -> f64 {
-    let mut rng = rand::thread_rng();
-    rng.gen_range(0.0..1.0)
-}
-
-#[allow(dead_code)]
-fn random_f64_wide(lower: f64, upper: f64) -> f64 {
-    let mut rng = rand::thread_rng();
-    rng.gen_range(lower..upper)
-}
 
 // /// Calculate the solutions to `r.at(t)` for all `t` that makes the ray point to the surface of the
 // /// sphere defined by `center` and `radius`

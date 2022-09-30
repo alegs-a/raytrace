@@ -1,4 +1,6 @@
 use super::color::Color;
+use super::math::random_f64_wide;
+
 use std::ops::{Add, Div, Mul, Neg, Sub};
 
 #[derive(Copy, Clone, Debug, Default)]
@@ -28,12 +30,34 @@ impl Vec3 {
         (self.x * self.x) + (self.y * self.y) + (self.z * self.z)
     }
 
+    /// Finds the magnitude of a vector
     pub fn length(&self) -> f64 {
         self.length_squared().sqrt()
     }
 
+    /// Divide a vector by its length to get the vector with the same direction, but a magnitude of
+    /// 1
     pub fn unit_vector(&self) -> Vec3 {
         self / self.length()
+    }
+
+    /// Internal function, used by random_in_unit_sphere()
+    fn random(min: f64, max: f64) -> Vec3 {
+        Vec3 {
+            x: random_f64_wide(min, max),
+            y: random_f64_wide(min, max),
+            z: random_f64_wide(min, max),
+        }
+    }
+
+    /// Generate a random vector of less than unit length
+    pub fn random_in_unit_sphere() -> Vec3 {
+        loop {
+            let p = Vec3::random(-1.0, 1.0);
+            if p.length_squared() < 1.0 {
+                return p;
+            }
+        }
     }
 }
 
