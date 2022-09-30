@@ -61,15 +61,13 @@ fn ray_color(r: &Ray, world: &dyn Hittable) -> Color {
 
 fn random_f64() -> f64 {
     let mut rng = rand::thread_rng();
-    let num = rng.gen_range(0.0..1.0);
-    num
+    rng.gen_range(0.0..1.0)
 }
 
 #[allow(dead_code)]
 fn random_f64_wide(lower: f64, upper: f64) -> f64 {
     let mut rng = rand::thread_rng();
-    let num = rng.gen_range(lower..upper);
-    num
+    rng.gen_range(lower..upper)
 }
 
 // /// Calculate the solutions to `r.at(t)` for all `t` that makes the ray point to the surface of the
