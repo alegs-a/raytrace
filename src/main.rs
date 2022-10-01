@@ -2,10 +2,10 @@ use raytrace::camera::Camera;
 use raytrace::color::Color;
 use raytrace::hittable::{HitRecord, Hittable};
 use raytrace::hittable_list::HittableList;
+use raytrace::math::random_f64;
 use raytrace::ray::Ray;
 use raytrace::sphere::Sphere;
 use raytrace::vec3::Vec3;
-use raytrace::math::random_f64;
 
 // use std::f64::consts::PI;
 use std::f64::INFINITY;
@@ -54,11 +54,11 @@ fn ray_color(r: &Ray, world: &dyn Hittable, depth: i32) -> Color {
 
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if depth <= 0 {
-        return Color::black()
+        return Color::black();
     }
 
     if world.hit(r, 0.001, INFINITY, &mut rec) {
-        let target = rec.p + rec.normal + Vec3::random_in_unit_sphere();
+        let target = rec.p + rec.normal + Vec3::random_unit_vector();
         return (ray_color(&Ray::new(rec.p, target - rec.p), world, depth - 1)) * 0.5;
     }
 
@@ -66,7 +66,6 @@ fn ray_color(r: &Ray, world: &dyn Hittable, depth: i32) -> Color {
     let t = 0.5 * (unit_direction.y + 1.0);
     (Color::white() * (1.0 - t)) + (Color::new(0.5, 0.7, 1.0) * t)
 }
-
 
 // /// Calculate the solutions to `r.at(t)` for all `t` that makes the ray point to the surface of the
 // /// sphere defined by `center` and `radius`
