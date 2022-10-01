@@ -17,6 +17,7 @@ fn main() {
     let image_width = 400;
     let image_height = (image_width as f64 / aspect_ratio) as i32;
     let samples_per_pixel = 100;
+    let max_depth = 50;
 
     // World
 
@@ -40,7 +41,7 @@ fn main() {
                 let u = (i as f64 + random_f64()) / ((image_width - 1) as f64);
                 let v = (j as f64 + random_f64()) / ((image_height - 1) as f64);
                 let r = cam.get_ray(u, v);
-                pixel_color += ray_color(&r, &world);
+                pixel_color += ray_color(&r, &world, max_depth);
             }
             Color::write_color(pixel_color, samples_per_pixel);
         }
@@ -48,11 +49,19 @@ fn main() {
 }
 
 /// Calculate the color of a ray, including the case where it intersects geometry
-fn ray_color(r: &Ray, world: &dyn Hittable) -> Color {
+fn ray_color(r: &Ray, world: &dyn Hittable, depth: i32) -> Color {
     let mut rec = HitRecord::default();
-    if world.hit(r, 0.0, INFINITY, &mut rec) {
-        return (rec.normal + Color::white()) * 0.5;
+
+    // If we've exceeded the ray bounce limit, no more light is gathered.
+    if depth <= 0 {
+        return Color::black()
     }
+
+    if world.hit(r, 0.001, INFINITY, &mut rec) {
+        let target = rec.p + rec.normal + Vec3::random_in_unit_sphere();
+        return (ray_color(&Ray::new(rec.p, target - rec.p), world, depth - 1)) * 0.5;
+    }
+
     let unit_direction: Vec3 = r.dir.unit_vector();
     let t = 0.5 * (unit_direction.y + 1.0);
     (Color::white() * (1.0 - t)) + (Color::new(0.5, 0.7, 1.0) * t)

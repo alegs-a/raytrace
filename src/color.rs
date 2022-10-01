@@ -23,11 +23,11 @@ impl Color {
         let mut g = color.g;
         let mut b = color.b;
 
-        // Divide the colour by the number of samples per pixel
+        // Divide the colour by the number of samples per pixel and gamma-correct for gamma = 2.0
         let scale = 1.0 / samples_per_pixel as f64;
-        r *= scale;
-        g *= scale;
-        b *= scale;
+        r = (r * scale).sqrt();
+        g = (g * scale).sqrt();
+        b = (b * scale).sqrt();
 
         // Write the translated [0, 255] value of each colour component
         println!(
