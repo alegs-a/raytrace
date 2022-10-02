@@ -1,12 +1,14 @@
+use super::material::Material;
 use super::ray::Ray;
 use super::vec3::Vec3;
 
-#[derive(Default, Clone, Copy)]
+#[derive(Default, Clone)]
 pub struct HitRecord {
     pub p: Vec3,
     pub normal: Vec3,
     pub t: f64,
     pub front_face: bool,
+    pub material: Box<Material>,
 }
 
 impl HitRecord {

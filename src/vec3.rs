@@ -63,6 +63,16 @@ impl Vec3 {
     pub fn random_unit_vector() -> Vec3 {
         Self::random_in_unit_sphere().unit_vector()
     }
+
+    pub fn near_zero(&self) -> bool {
+        let s = 1e-8;
+        self.x < s && self.y < s && self.z < s
+    }
+
+    /// Reflect a vector around the normal `n`
+    pub fn reflect(&self, n: &Vec3) -> Vec3 {
+        *self - (*n * 2.0 * self.dot(n))
+    }
 }
 
 impl Neg for Vec3 {

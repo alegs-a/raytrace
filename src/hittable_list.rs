@@ -23,7 +23,7 @@ impl Hittable for HittableList {
             if object.hit(r, t_min, closest_so_far, &mut temp_record) {
                 hit_anything = true;
                 closest_so_far = temp_record.t;
-                *rec = temp_record;
+                *rec = temp_record.clone();
             }
         }
 

@@ -4,6 +4,7 @@ use super::vec3::Vec3;
 ///
 /// A ray is an object that defines an origin point and then a direction from that origin. Both are
 /// internally represented as a Vec3, in its capacity as simply describing a point in 3D space.
+#[derive(Default)]
 pub struct Ray {
     /// The vector describing the origin of the ray
     pub orig: Vec3,

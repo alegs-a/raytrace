@@ -1,6 +1,7 @@
 use std::ops::{Add, AddAssign, Div, Mul, Sub};
 
 /// Define an RGB color
+#[derive(Debug, Default, Clone, Copy)]
 pub struct Color {
     pub r: f64,
     pub g: f64,
@@ -125,6 +126,18 @@ impl Mul<f64> for Color {
             r: self.r * rhs,
             g: self.g * rhs,
             b: self.b * rhs,
+        }
+    }
+}
+
+impl Mul<Color> for Color {
+    type Output = Self;
+
+    fn mul(self, rhs: Color) -> Self {
+        Color {
+            r: self.r * rhs.r,
+            g: self.g * rhs.g,
+            b: self.b * rhs.b,
         }
     }
 }

@@ -2,12 +2,12 @@ use raytrace::camera::Camera;
 use raytrace::color::Color;
 use raytrace::hittable::{HitRecord, Hittable};
 use raytrace::hittable_list::HittableList;
+use raytrace::material::Material;
 use raytrace::math::random_f64;
 use raytrace::ray::Ray;
 use raytrace::sphere::Sphere;
 use raytrace::vec3::Vec3;
 
-// use std::f64::consts::PI;
 use std::f64::INFINITY;
 
 fn main() {
@@ -22,8 +22,41 @@ fn main() {
     // World
 
     let mut world = HittableList::default();
-    world.add(Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)));
-    world.add(Box::new(Sphere::new(Vec3::new(0.0, -100.5, -1.0), 100.0)));
+    let material_ground = Box::new(Material::Lambertian {
+        albedo: Color::new(0.8, 0.8, 0.0),
+    });
+    let material_center = Box::new(Material::Lambertian {
+        albedo: Color::new(0.7, 0.3, 0.3),
+    });
+    let material_left = Box::new(Material::Metal {
+        albedo: Color::new(0.8, 0.8, 0.8),
+        fuzz: 0.3,
+    });
+    let material_right = Box::new(Material::Metal {
+        albedo: Color::new(0.8, 0.6, 0.2),
+        fuzz: 0.0,
+    });
+
+    world.add(Box::new(Sphere::new(
+        Vec3::new(0.0, -100.5, -1.0),
+        100.0,
+        material_ground,
+    )));
+    world.add(Box::new(Sphere::new(
+        Vec3::new(0.0, 0.0, -1.0),
+        0.5,
+        material_center,
+    )));
+    world.add(Box::new(Sphere::new(
+        Vec3::new(-1.0, 0.0, -1.0),
+        0.5,
+        material_left,
+    )));
+    world.add(Box::new(Sphere::new(
+        Vec3::new(1.0, 0.0, -1.0),
+        0.5,
+        material_right,
+    )));
 
     // Camera
 
@@ -58,30 +91,18 @@ fn ray_color(r: &Ray, world: &dyn Hittable, depth: i32) -> Color {
     }
 
     if world.hit(r, 0.001, INFINITY, &mut rec) {
-        let target = rec.p + rec.normal + Vec3::random_unit_vector();
-        return (ray_color(&Ray::new(rec.p, target - rec.p), world, depth - 1)) * 0.5;
+        let mut scattered = Ray::default();
+        let mut attenuation = Color::default();
+        if rec
+            .material
+            .scatter(r, &rec, &mut attenuation, &mut scattered)
+        {
+            return attenuation * ray_color(&scattered, world, depth - 1);
+        }
+        return Color::black();
     }
 
     let unit_direction: Vec3 = r.dir.unit_vector();
     let t = 0.5 * (unit_direction.y + 1.0);
     (Color::white() * (1.0 - t)) + (Color::new(0.5, 0.7, 1.0) * t)
 }
-
-// /// Calculate the solutions to `r.at(t)` for all `t` that makes the ray point to the surface of the
-// /// sphere defined by `center` and `radius`
-// fn hit_sphere(center: Vec3, radius: f64, r: &Ray) -> f64 {
-//     let oc = r.orig - center;
-//     let a = r.dir.length_squared();
-//     let half_b = oc.dot(&r.dir);
-//     let c = oc.length_squared() - (radius * radius);
-//     let discriminant = (half_b * half_b) - (a * c);
-//     if discriminant < 0.0 {
-//         -1.0
-//     } else {
-//         (-half_b - discriminant.sqrt()) / a
-//     }
-// }
-
-// fn degrees_to_radians(degrees: f64) -> f64 {
-//     (degrees * PI) / 180.0
-// }
