@@ -25,8 +25,10 @@ fn main() {
     let output_file = File::create(output_path).expect("Unable to open file");
     let mut writer = std::io::BufWriter::new(output_file);
 
+    let samples_per_pixel = args.samples_per_pixel.unwrap_or(100);
+
     let mut scene = Scene::new(400, 200);
     scene.add(Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)));
     scene.add(Box::new(Sphere::new(Vec3::new(0.0, -100.5, 0.0), 100.0)));
-    scene.render(&mut writer).expect("Failed to write to file.");
+    scene.render(&mut writer, samples_per_pixel).expect("Failed to write to file.");
 }
