@@ -35,11 +35,23 @@ impl Colour {
     ///
     /// Takes the sum of the colours from `samples_per_pixel` rays, and scales them to be within
     /// \[0,1\].
-    pub fn write<W: Write>(self, writer: &mut io::BufWriter<W>, samples_per_pixel: i32) -> io::Result<()> {
-        let scale = 1.0 / samples_per_pixel as f64;
-        let r = ((scale * self.r).clamp(0.0, 1.0) * 255.0) as i32;
-        let g = ((scale * self.g).clamp(0.0, 1.0) * 255.0) as i32;
-        let b = ((scale * self.b).clamp(0.0, 1.0) * 255.0) as i32;
+    pub fn write<W: Write>(
+        self,
+        writer: &mut io::BufWriter<W>,
+        samples_per_pixel: i32,
+    ) -> io::Result<()> {
+        let mut r = self.r;
+        let mut g = self.g;
+        let mut b = self.b;
+
+        let scale = 2.0 / samples_per_pixel as f64;
+        r = (scale * r).sqrt();
+        g = (scale * g).sqrt();
+        b = (scale * b).sqrt();
+
+        let r = (256.0 * r.clamp(0.0, 0.999)) as i32;
+        let g = (256.0 * g.clamp(0.0, 0.999)) as i32;
+        let b = (256.0 * b.clamp(0.0, 0.999)) as i32;
         writeln!(writer, "{} {} {}", r, g, b)?;
         Ok(())
     }

@@ -3,6 +3,7 @@ use crate::camera::Camera;
 use crate::hittable::Hittable;
 use crate::hittable_list::HittableList;
 use crate::ray::Ray;
+use crate::vec3::Vec3;
 use std::io::prelude::*;
 
 use crate::colour::Colour;
@@ -43,6 +44,7 @@ impl Scene {
         &self,
         writer: &mut std::io::BufWriter<W>,
         samples_per_pixel: i32,
+        max_depth: i32
     ) -> std::io::Result<()> {
         // Image
         // let aspect_ratio = self.image_width as f64 / self.image_height as f64;
@@ -64,7 +66,7 @@ impl Scene {
                     let v = (j as f64 + rng.gen::<f64>()) / (self.image_height - 1) as f64;
 
                     let ray = cam.get_ray(u, v);
-                    colour += self.ray_colour(ray);
+                    colour += self.ray_colour(ray, max_depth);
                 }
                 colour.write(writer, samples_per_pixel)?;
             }
@@ -73,14 +75,19 @@ impl Scene {
     }
 
     /// Return the colour of the geometry a ray hits, or the background colour if it does not hit
-    /// any geometry.
-    pub fn ray_colour(&self, ray: Ray) -> Colour {
+    /// any geometry, or black if it exceeds the maximum depth.
+    pub fn ray_colour(&self, ray: Ray, depth: i32) -> Colour {
+        // If we've exceeded the bounce limit no light is returned
+        if depth <= 0 {
+            return Colour::black();
+        }
+
         if let Some(hit_record) = self.world.hit(ray, 0.0, f64::INFINITY) {
+            let target = hit_record.point + hit_record.normal + Vec3::random_in_unit_sphere();
             return 0.5
-                * Colour::new(
-                    hit_record.normal.x + 1.0,
-                    hit_record.normal.y + 1.0,
-                    hit_record.normal.z + 1.0,
+                * self.ray_colour(
+                    Ray::new(hit_record.point, target - hit_record.point),
+                    depth - 1,
                 );
         }
         ray.bg_colour()

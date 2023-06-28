@@ -1,5 +1,7 @@
 //! Store and manipulate 3-dimensional vectors.
 
+use rand::Rng;
+
 #[derive(PartialEq, Clone, Copy, Debug)]
 /// A 3D vector.
 pub struct Vec3 {
@@ -21,6 +23,34 @@ impl Vec3 {
     pub fn zeros() -> Vec3 {
         Vec3::new(0.0, 0.0, 0.0)
     }
+
+    /// Generate a random vector in the unit cube.
+    pub fn random() -> Vec3 {
+        let mut rng = rand::thread_rng();
+        Vec3::new(rng.gen_range(-1.0..1.0), rng.gen_range(-1.0..1.0), rng.gen_range(-1.0..1.0))
+    }
+
+    /// Generate a random vector between the given parameters.
+    ///
+    /// Returns a vector where the `x`, `y` and `z` components are all between `min` and `max`.
+    fn random_between(min: f64, max: f64) -> Vec3 {
+        let mut rng = rand::thread_rng();
+        Vec3::new(rng.gen_range(min..max), rng.gen_range(min..max), rng.gen_range(min..max))
+    }
+
+    /// Generate a random vector in the unit sphere.
+    ///
+    /// Returns a vector whose magnitude is less than 1.
+    pub fn random_in_unit_sphere() -> Vec3 {
+        loop {
+            let p = Vec3::random();
+            if p.length_squared() < 1.0 {
+                return p
+            }
+        }
+    }
+
+    
 
     /// Calculate the dot product of two vectors.
     pub fn dot(&self, other: Vec3) -> f64 {
@@ -238,5 +268,10 @@ mod tests {
                 z: 0.0
             }
         );
+    }
+
+    #[test]
+    fn test_new_in_unit_sphere() {
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
     }
 }
