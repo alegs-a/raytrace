@@ -273,5 +273,22 @@ mod tests {
     #[test]
     fn test_new_in_unit_sphere() {
         assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
+        assert!(Vec3::random_in_unit_sphere().length() < 1.0);
     }
 }

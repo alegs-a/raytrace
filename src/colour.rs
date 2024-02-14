@@ -44,7 +44,7 @@ impl Colour {
         let mut g = self.g;
         let mut b = self.b;
 
-        let scale = 2.0 / samples_per_pixel as f64;
+        let scale = 1.0 / samples_per_pixel as f64;
         r = (scale * r).sqrt();
         g = (scale * g).sqrt();
         b = (scale * b).sqrt();
@@ -96,6 +96,17 @@ impl std::ops::Mul<Colour> for f64 {
             r: colour.r * self,
             g: colour.g * self,
             b: colour.b * self,
+        }
+    }
+}
+
+impl std::ops::Mul<Colour> for Colour {
+    type Output = Colour;
+    fn mul(self, colour: Colour) -> Colour {
+        Colour {
+            r: colour.r * self.r,
+            g: colour.g * self.g,
+            b: colour.b * self.b,
         }
     }
 }

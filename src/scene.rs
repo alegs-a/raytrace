@@ -90,7 +90,7 @@ impl Scene {
                     depth - 1,
                 );
         }
-        ray.bg_colour()
+        2.0 * ray.bg_colour()
     }
 
     /// Generate a simple test image.

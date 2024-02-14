@@ -28,7 +28,7 @@ fn main() {
     let output_file = File::create(output_path).expect("Unable to open file");
     let mut writer = std::io::BufWriter::new(output_file);
 
-    let mut scene = Scene::new(400, 200);
+    let mut scene = Scene::new(400, 225);
     scene.add(Box::new(Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5)));
     scene.add(Box::new(Sphere::new(Vec3::new(0.0, -100.5, 0.0), 100.0)));
     scene
