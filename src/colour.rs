@@ -26,6 +26,7 @@ impl Colour {
         Colour::new(1.0, 0.0, 0.0)
     }
 
+<<<<<<< HEAD
     /// The colour black.
     pub fn black() -> Colour {
         Colour::new(0.0, 0.0, 0.0)
@@ -52,6 +53,13 @@ impl Colour {
         let r = (256.0 * r.clamp(0.0, 0.999)) as i32;
         let g = (256.0 * g.clamp(0.0, 0.999)) as i32;
         let b = (256.0 * b.clamp(0.0, 0.999)) as i32;
+=======
+    /// Convert the \[0,1\] values of the `Colour` to the \[0,255\] values to be written to the output.
+    pub fn write<W: Write>(self, writer: &mut io::BufWriter<W>) -> io::Result<()> {
+        let r = (self.r * 255.0) as i32;
+        let g = (self.g * 255.0) as i32;
+        let b = (self.b * 255.0) as i32;
+>>>>>>> parent of 3f3969a (Finish chapter 7 (antialiasing))
         writeln!(writer, "{} {} {}", r, g, b)?;
         Ok(())
     }
@@ -64,16 +72,6 @@ impl std::ops::Add for Colour {
             r: self.r + other.r,
             g: self.g + other.g,
             b: self.b + other.b,
-        }
-    }
-}
-
-impl std::ops::AddAssign for Colour {
-    fn add_assign(&mut self, rhs: Self) {
-        *self = Self {
-            r: self.r + rhs.r,
-            g: self.g + rhs.g,
-            b: self.b + rhs.b,
         }
     }
 }
